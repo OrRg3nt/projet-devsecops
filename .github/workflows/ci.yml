@@ -23,4 +23,11 @@ jobs:
         with:
           context: ./app1-frontend
           push: true
+          tags: ghcr.io/orrg3nt/projet-devsecops/frontend:latest
+
+      - name: Build and push Backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./app2-backend
+          push: true
           tags: ghcr.io/orrg3nt/projet-devsecops/backend:latest
