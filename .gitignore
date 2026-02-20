@@ -1,0 +1,11 @@
+# Ignorer les images compressées
+*.tar
+images_build/
+
+# Ignorer les fichiers de déploiement locaux (si tu veux les garder secrets)
+k3s_minimal/
+
+# Ignorer les fichiers système ou caches
+__pycache__/
+*.py[cod]
+.DS_Store

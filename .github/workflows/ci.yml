@@ -1,0 +1,51 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # --- ÉTAPE TESTS (Demandée par la consigne) ---
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install flake8
+          # Si tu as un requirements.txt, décommente la ligne suivante :
+          # pip install -r app1-frontend/requirements.txt
+
+      - name: Lint with flake8
+        run: |
+          # Arrête le build s'il y a des erreurs de syntaxe Python
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      # --- ÉTAPE BUILD & PUSH ---
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./app1-frontend
+          push: true
+          tags: ghcr.io/orrg3nt/frontend:latest
+
+      - name: Build and push Backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./app2-backend
+          push: true
+          tags: ghcr.io/orrg3nt/backend:latest
