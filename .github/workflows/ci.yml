@@ -31,3 +31,12 @@ jobs:
           context: ./app2-backend
           push: true
           tags: ghcr.io/orrg3nt/projet-devsecops/backend:latest
+
+      - name: Deploy to k3s via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            kubectl apply -f /PROJET_DEVSECOPS/PHASE_1_DEV/k3s_minimal/
